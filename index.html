@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNO Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>UNO Game</h1>
+            <button id="new-game-btn">New Game</button>
+            <div class="achievements-button-container">
+                <button id="achievements-btn" class="icon-btn" title="Achievements">🏆</button>
+            </div>
+        </div>
+        
+        <!-- Start Panel -->
+        <div id="start-panel" class="game-panel">
+            <h2>Welcome to UNO!</h2>
+            <p>Play against an AI opponent and try to get rid of all your cards first.</p>
+            <div class="rules">
+                <h3>Quick Rules:</h3>
+                <ul>
+                    <li>Match cards by color or number/type</li>
+                    <li>Special cards: Skip, Reverse, Draw Two, Wild, Wild Draw Four</li>
+                    <li>First player to get rid of all cards wins!</li>
+                </ul>
+            </div>
+            <div class="start-buttons">
+                <button id="start-game-btn" class="action-btn">Start Game</button>
+                <button id="start-tutorial-btn" class="action-btn tutorial-btn">Tutorial</button>
+                <button id="puzzles-btn" class="action-btn puzzle-btn">Puzzles</button>
+            </div>
+        </div>
+        
+        <!-- Game Area (initially hidden) -->
+        <div id="game-area-container" class="game-area-container" style="display: none;">
+            <div class="game-area">
+                <div class="opponent-area">
+                    <h2>AI Opponent</h2>
+                    <div class="card-count">Cards: <span id="ai-card-count">7</span></div>
+                    <div id="ai-hand" class="hand ai-hand"></div>
+                </div>
+                
+                <div class="play-area">
+                    <div class="deck-area">
+                        <div id="deck" class="deck">
+                            <div class="card back"></div>
+                        </div>
+                        <div id="discard-pile" class="discard-pile"></div>
+                    </div>
+                    <div id="game-message" class="game-message">Your turn! Play a card or draw from the deck.</div>
+                </div>
+                
+                <div class="player-area">
+                    <h2>Your Hand</h2>
+                    <div id="player-hand" class="hand player-hand"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Win Panel -->
+        <div id="win-panel" class="game-panel" style="display: none;">
+            <h2>You Win!</h2>
+            <p>Congratulations! You've defeated the AI opponent.</p>
+            <div class="stats">
+                <p>Cards left in AI's hand: <span id="ai-remaining-count">0</span></p>
+            </div>
+            <button id="play-again-win-btn" class="action-btn">Play Again</button>
+        </div>
+        
+        <!-- Lose Panel -->
+        <div id="lose-panel" class="game-panel" style="display: none;">
+            <h2>You Lose!</h2>
+            <p>The AI has won this round. Better luck next time!</p>
+            <div class="stats">
+                <p>Cards left in your hand: <span id="player-remaining-count">0</span></p>
+            </div>
+            <button id="play-again-lose-btn" class="action-btn">Play Again</button>
+        </div>
+        
+        <div class="color-chooser" id="color-chooser">
+            <h3>Choose a color:</h3>
+            <div class="color-options">
+                <button class="color-btn red" data-color="red"></button>
+                <button class="color-btn blue" data-color="blue"></button>
+                <button class="color-btn green" data-color="green"></button>
+                <button class="color-btn yellow" data-color="yellow"></button>
+            </div>
+        </div>
+        
+        <div id="achievements-panel" class="achievements-panel">
+            <div class="achievements-header">
+                <h2>Achievements</h2>
+                <button id="close-achievements-btn" class="close-btn">×</button>
+            </div>
+            <div class="achievements-list">
+                <div class="achievement" id="achievement-first-win">
+                    <div class="achievement-icon locked">🏆</div>
+                    <div class="achievement-info">
+                        <h3>First Victory</h3>
+                        <p>Win your first game against the AI</p>
+                    </div>
+                    <div class="achievement-status">🔒</div>
+                </div>
+                <div class="achievement" id="achievement-wild-master">
+                    <div class="achievement-icon locked">🌈</div>
+                    <div class="achievement-info">
+                        <h3>Wild Master</h3>
+                        <p>Play 5 wild cards in a single game</p>
+                    </div>
+                    <div class="achievement-status">🔒</div>
+                </div>
+                <div class="achievement" id="achievement-comeback">
+                    <div class="achievement-icon locked">🔄</div>
+                    <div class="achievement-info">
+                        <h3>Comeback King</h3>
+                        <p>Win a game after having 10+ cards in your hand</p>
+                    </div>
+                    <div class="achievement-status">🔒</div>
+                </div>
+                <div class="achievement" id="achievement-perfect">
+                    <div class="achievement-icon locked">⭐</div>
+                    <div class="achievement-info">
+                        <h3>Perfect Game</h3>
+                        <p>Win without drawing any additional cards</p>
+                    </div>
+                    <div class="achievement-status">🔒</div>
+                </div>
+                <div class="achievement" id="achievement-special-master">
+                    <div class="achievement-icon locked">🔄</div>
+                    <div class="achievement-info">
+                        <h3>Special Card Master</h3>
+                        <p>Play 3 special cards in a row</p>
+                    </div>
+                    <div class="achievement-status">🔒</div>
+                </div>
+                <div class="achievement" id="achievement-three-wins">
+                    <div class="achievement-icon locked">🏅</div>
+                    <div class="achievement-info">
+                        <h3>Experienced Player</h3>
+                        <p>Win 3 games against the AI</p>
+                    </div>
+                    <div class="achievement-status">🔒</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="achievement-notification" class="achievement-notification">
+            <div class="achievement-notification-icon">🏆</div>
+            <div class="achievement-notification-content">
+                <h3>Achievement Unlocked!</h3>
+                <p id="achievement-notification-text">Achievement name</p>
+            </div>
+        </div>
+        
+        <!-- Update Tutorial Panel -->
+        <div id="tutorial-panel" class="tutorial-panel" style="display: none;">
+            <div class="tutorial-content">
+                <h3 id="tutorial-title">Welcome to the UNO Tutorial!</h3>
+                <p id="tutorial-text">Let's learn how to play UNO step by step.</p>
+            </div>
+            <button id="tutorial-next-btn" class="tutorial-btn">Next</button>
+        </div>
+        
+        <!-- Add Puzzles Panel -->
+        <div id="puzzles-panel" class="game-panel" style="display: none;">
+            <h2>UNO Puzzles</h2>
+            <p>Test your UNO skills with these challenging puzzles!</p>
+            
+            <div class="puzzles-list">
+                <div class="puzzle-item" data-puzzle="1">
+                    <div class="puzzle-icon">🧩</div>
+                    <div class="puzzle-info">
+                        <h3>Puzzle 1: The Perfect Play</h3>
+                        <p>Win in one move with the perfect card.</p>
+                    </div>
+                    <div class="puzzle-status" id="puzzle-status-1">⭐</div>
+                </div>
+                
+                <div class="puzzle-item" data-puzzle="2">
+                    <div class="puzzle-icon">🧩</div>
+                    <div class="puzzle-info">
+                        <h3>Puzzle 2: Color Strategy</h3>
+                        <p>Use wild cards strategically to win in two moves.</p>
+                    </div>
+                    <div class="puzzle-status" id="puzzle-status-2">⭐</div>
+                </div>
+                
+                <div class="puzzle-item" data-puzzle="3">
+                    <div class="puzzle-icon">🧩</div>
+                    <div class="puzzle-info">
+                        <h3>Puzzle 3: Special Card Challenge</h3>
+                        <p>Use special cards to prevent the AI from winning.</p>
+                    </div>
+                    <div class="puzzle-status" id="puzzle-status-3">⭐</div>
+                </div>
+            </div>
+            
+            <button id="back-from-puzzles-btn" class="action-btn">Back to Menu</button>
+        </div>
+        
+        <!-- Add Puzzle Complete Panel -->
+        <div id="puzzle-complete-panel" class="game-panel" style="display: none;">
+            <h2>Puzzle Completed!</h2>
+            <p id="puzzle-complete-message">You've successfully solved the puzzle!</p>
+            <div class="puzzle-stars">⭐⭐⭐</div>
+            <button id="next-puzzle-btn" class="action-btn">Next Puzzle</button>
+            <button id="puzzles-menu-btn" class="action-btn">Puzzles Menu</button>
+        </div>
+        
+        <!-- Add Puzzle Instructions Panel -->
+        <div id="puzzle-instructions" class="tutorial-panel" style="display: none;">
+            <div class="tutorial-content">
+                <h3 id="puzzle-title">Puzzle Challenge</h3>
+                <p id="puzzle-text">Solve this UNO puzzle by making the right moves.</p>
+            </div>
+            <button id="start-puzzle-btn" class="tutorial-btn">Start Puzzle</button>
+        </div>
+    </div>
+    
+    <script src="uno.js"></script>
+</body>
+</html> 
